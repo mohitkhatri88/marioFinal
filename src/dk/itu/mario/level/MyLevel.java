@@ -377,6 +377,10 @@ public class MyLevel extends Level{
 	                if (y >= floor)
 	                {
 	                    setBlock(x, y, GROUND);
+	                    float shouldDecorate = random.nextFloat();
+	                    if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	                    	decorate2(x, x+1, y);
+	                    }
 	                }
 	                else
 	                {
@@ -385,14 +389,26 @@ public class MyLevel extends Level{
 	                        if (y == cannonHeight)
 	                        {
 	                            setBlock(x, y, (byte) (14 + 0 * 16));
+	                            float shouldDecorate = random.nextFloat();
+	                            if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                    	decorate2(x, x+1, y);
+	    	                    }
 	                        }
 	                        else if (y == cannonHeight + 1)
 	                        {
 	                            setBlock(x, y, (byte) (14 + 1 * 16));
+	                            float shouldDecorate = random.nextFloat();
+	                            if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                    	decorate2(x, x+1, y);
+	    	                    }
 	                        }
 	                        else
 	                        {
 	                            setBlock(x, y, (byte) (14 + 2 * 16));
+	                            float shouldDecorate = random.nextFloat();
+	                            if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                    	decorate2(x, x+1, y);
+	    	                    }
 	                        }
 	                    }
 	                }
@@ -402,60 +418,60 @@ public class MyLevel extends Level{
 	        return length;
 	    }
 	    
-	    private int coinBuildCannons(int xo, int maxLength)
-	    {
-	        int length = random.nextInt(10) + 2;
-	        if (length > maxLength) length = maxLength;
-
-	        int floor = height - 1 - random.nextInt(4);
-	        int xCannon = xo + 1 + random.nextInt(4);
-	        for (int x = xo; x < xo + length; x++)
-	        {
-	        	boolean temp = false;
-	            if (x > xCannon)
-	            {
-	                xCannon += 2 + random.nextInt(4);
-	            }
-	            if (xCannon == xo + length - 1) xCannon += 10;
-	            int cannonHeight = floor - random.nextInt(4) - 1;
-
-	            for (int y = 0; y < height; y++)
-	            {
-	                if (y >= floor)
-	                {
-	                    setBlock(x, y, GROUND);
-	                    if(temp == false)
-	                    	temp = decorate2(x, x+1, y);
-	                }
-	                else
-	                {
-	                    if (x == xCannon && y >= cannonHeight)
-	                    {
-	                        if (y == cannonHeight)
-	                        {
-	                            setBlock(x, y, (byte) (14 + 0 * 16));
-	                            if(temp == false)
-	    	                    	temp = decorate2(x, x+1, y);
-	                        }
-	                        else if (y == cannonHeight + 1)
-	                        {
-	                            setBlock(x, y, (byte) (14 + 1 * 16));
-	                            if(temp == false)
-	    	                    	temp = decorate2(x, x+1, y);
-	                        }
-	                        else
-	                        {
-	                            setBlock(x, y, (byte) (14 + 2 * 16));
-	                            if(temp == false)
-	    	                    	temp = decorate2(x, x+1, y);
-	                        }
-	                    }
-	                }
-	            }
-	        }
-
-	        return length;
-	    }
+//	    private int coinBuildCannons(int xo, int maxLength)
+//	    {
+//	        int length = random.nextInt(10) + 2;
+//	        if (length > maxLength) length = maxLength;
+//
+//	        int floor = height - 1 - random.nextInt(4);
+//	        int xCannon = xo + 1 + random.nextInt(4);
+//	        for (int x = xo; x < xo + length; x++)
+//	        {
+//	        	boolean temp = false;
+//	            if (x > xCannon)
+//	            {
+//	                xCannon += 2 + random.nextInt(4);
+//	            }
+//	            if (xCannon == xo + length - 1) xCannon += 10;
+//	            int cannonHeight = floor - random.nextInt(4) - 1;
+//
+//	            for (int y = 0; y < height; y++)
+//	            {
+//	                if (y >= floor)
+//	                {
+//	                    setBlock(x, y, GROUND);
+//	                    if(temp == false)
+//	                    	temp = decorate2(x, x+1, y);
+//	                }
+//	                else
+//	                {
+//	                    if (x == xCannon && y >= cannonHeight)
+//	                    {
+//	                        if (y == cannonHeight)
+//	                        {
+//	                            setBlock(x, y, (byte) (14 + 0 * 16));
+//	                            if(temp == false)
+//	    	                    	temp = decorate2(x, x+1, y);
+//	                        }
+//	                        else if (y == cannonHeight + 1)
+//	                        {
+//	                            setBlock(x, y, (byte) (14 + 1 * 16));
+//	                            if(temp == false)
+//	    	                    	temp = decorate2(x, x+1, y);
+//	                        }
+//	                        else
+//	                        {
+//	                            setBlock(x, y, (byte) (14 + 2 * 16));
+//	                            if(temp == false)
+//	    	                    	temp = decorate2(x, x+1, y);
+//	                        }
+//	                    }
+//	                }
+//	            }
+//	        }
+//
+//	        return length;
+//	    }
 
 	    private int buildHillStraight(int xo, int maxLength)
 	    {
@@ -475,7 +491,7 @@ public class MyLevel extends Level{
 	            }
 	        }
 
-	        addEnemyLine(xo + 1, xo + length - 1, floor - 1);
+	        //addEnemyLine(xo + 1, xo + length - 1, floor - 1);
 
 	        int h = floor;
 
@@ -671,14 +687,14 @@ public class MyLevel extends Level{
 	    {
 	        for (int x = x0; x < x1; x++)
 	        {
-	        	float shouldCreateEnemy = random.nextFloat();
-	            if (shouldCreateEnemy <= 0.7)
-	            {
+	        	//float shouldCreateEnemy = random.nextFloat();
+	            //if (shouldCreateEnemy <= 0.7)
+	            //{
 	                int type = random.nextInt(4);
 	                
 	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextFloat() < 0.3));
 	                ENEMIES++;
-	            }
+	            //}
 	        }
 	    }
 
@@ -959,7 +975,7 @@ public class MyLevel extends Level{
 	        boolean rocks = true;
 
 	        //add an enemy line above the box
-	        addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+	        //addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 
 	       // Make whole decorate line have coins 
 	        int s = 0;
