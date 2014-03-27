@@ -24,14 +24,33 @@ public class MyLevel extends Level{
 	 public   boolean DESTROYER = false;
 	 public   GamePlay gp;
 	 
-	 public enum Difficulty{EASY, MEDIUM, HARD, HARDER, HARDEST}
-	 
-	 public enum Profile{COINKEEPER, KILLER, DISCOVERER, SPEEDY, JUMPER}
+	 public enum Profile{COINKEEPER, KILLER, SPEEDY, JUMPER}
 	 
 	 public class PlayerProfile {
-		 private Difficulty difficulty;
-		 private Profile profile = Profile.SPEEDY;
 		 
+		 /*Following four profiles will be generated. 
+		  * COINKEEPER :  Generate a lot of coins in the map. 
+		  * KILLER : Generate a lot of enemies in the map. 
+		  * SPEEDY : Doesn't like hills. Remove them. 
+		  * JUMPER : Likes to jump. Put in more jumps. 
+		  * For speedy and jumper, the values of the coinkeeper and killer remain the same. 
+		  * For Coinkeeper and killer, i just change the probability of the decor, and all other things are same. 
+		  */
+		  		 
+		 public Profile profile = Profile.SPEEDY;
+		 
+		 //Variables which decide the probabilities of various components being present. 
+		 public double hillProbability = 2.0f;
+		 public double jumpProbability = 4.0f;
+		 public double tubesProbability = 6.0f;
+		 public double cannonsProbability = 8.0f;
+		 public double straightProbability = 1.0f;
+		 public double coinProbability = 0.9f;
+		 public double enemiesProbability = 0.9f;
+		 
+		 /*
+		  * Used for keeping the preferences that help decide the type of plan that will be used. 
+		  */
 		 public PlayerProfile(GamePlay pm) {
 			 //Get the percentage of the enemies killed. 
 			 int totalEnemiesKilled = pm.ArmoredTurtlesKilled + pm.CannonBallKilled + pm.ChompFlowersKilled + pm.RedTurtlesKilled + pm.GreenTurtlesKilled + pm.JumpFlowersKilled;
@@ -42,29 +61,31 @@ public class MyLevel extends Level{
 			 double percentageCoinBlocks = pm.percentageBlocksDestroyed;
 			 
 			 /*Rules for deciding between the personalities*/
-			 if (percentageKilled > 0.3) {
+			 if (percentageKilled > 0.5) {
+				 System.out.println("Killer has been selected.");
 				 profile = Profile.KILLER;
-			 } else if (percentageCoinBlocks >= 0.3 && percentageCoins >= 0.3) {
-				 profile = Profile.DISCOVERER;
-			 } else if (percentageCoinBlocks > 0.3) {
+				 this.enemiesProbability = 0.8;
+			 } else if (percentageCoins > 0.5) {
+				 System.out.println("Coinkeeper has been selected.");
 				 profile = Profile.COINKEEPER;
-			 } else if (percentageCoinBlocks < 0.3 && percentageCoins < 0.3) {
+				 this.coinProbability = 0.8;
+			 } else if (pm.percentageBlocksDestroyed < 0.3 ) {
+				 System.out.println("Speedy got selected, less value will be given to hills.");
 				 profile = Profile.SPEEDY;
-			 } else if (pm.aimlessJumps/pm.jumpsNumber > 0.4) {
+				 //Reduce the hill Probability
+				 this.hillProbability = 1.0;
+				 this.jumpProbability = 3.25;
+				 this.tubesProbability = 5.5;
+				 this.cannonsProbability = 7.75;
+				 this.straightProbability =  10.0;
+			 } else if (pm.aimlessJumps/pm.jumpsNumber > 0.5) {
+				 System.out.println("Jumper has been selected.");
 				 profile = Profile.JUMPER;
-			 }
-			 
-			 //We have to decide between overall difficulty levels.
-			 if (pm.WinOrLose == true) {
-				 difficulty = Difficulty.HARDEST;
-			 } else if (pm.timesOfDeathByArmoredTurtle <= 1 && pm.timesOfDeathByCannonBall <=1 && pm.timesOfDeathByChompFlower <=1 && pm.timesOfDeathByFallingIntoGap <=1) {
-				 difficulty = Difficulty.HARDER;
-			 } else if (pm.timesOfDeathByArmoredTurtle <= 2 && pm.timesOfDeathByCannonBall <=2 && pm.timesOfDeathByChompFlower <=2 && pm.timesOfDeathByFallingIntoGap <=2) {
-				 difficulty = Difficulty.HARD;
-			 } else if (percentageCoins > 0.3) {
-				 difficulty = Difficulty.MEDIUM;
-			 } else {
-				 difficulty = Difficulty.EASY;
+				 this.hillProbability = 3;
+				 this.jumpProbability = 4.75;
+				 this.tubesProbability = 6.5;
+				 this.cannonsProbability = 8.25;
+				 this.straightProbability =  10.0;
 			 }
 		 }
 	 }
@@ -91,8 +112,12 @@ public class MyLevel extends Level{
 	    {
 	        this(width, height);
 	        verify(playerMetrics);
-	        creat(seed, difficulty, type);
+	        if (playerMetrics == null) {
+	        	System.out.println("OH NO ITS NULL AGAIN!!!RUN FOR YOUR LIFE!!!");
+	        }
 	        this.playerProfile = new PlayerProfile(playerMetrics);
+	        creat(seed, difficulty, type);
+	        
 	    }
 
 	    public void verify(GamePlay gp){
@@ -112,43 +137,10 @@ public class MyLevel extends Level{
 	        int length = 0;
 	        length += buildStraight(0, width, true);
 	        
-	        //create all of the medium sections
+	        //create all of the medium sections based on the profile that we have earlier generated. 
 	        while (length < width - 64)
 	        {
-	        	if(COINKEEPERMODE == true){
-	        		
-	        	}else if(REGULARPLAYER == true){
-	        		if(REGULAR_HARD == true){
-	        			
-	        		}else if(REGULAR_EASY == true){
-	        			
-	        		}
-	        	}else if(DESTROYER == true){
-	        		
-	        	}
-	            //length += buildZone(length, width - length);
-//				length += coinBuildStraight(length, width-length, false);
-//				length += coinBuildStraight(length, width-length, false);
-//				length += coinBuildHillStraight(length, width-length);
-//				length += coinBuildJump(length, width-length);
-//				length += coinBuildTubes(length, width-length);
-//				length += coinBuildCannons(length, width-length);
-	        	
-				length += buildStraight(length, width-length, false);
-				length += buildStraight(length, width-length, false);
-				length += buildHillStraight(length, width-length);
-				length += buildJump(length, width-length);
-				length += buildTubes(length, width-length);
-				length += buildCannons(length, width-length);
-	        	
-				/*length += buildStraight(length, width-length, false);
-				length += buildStraight(length, width-length, false);
-				length += buildHillStraight(length, width-length);
-				//length += buildJump(length, width-length);
-				//length += buildJump(length, width-length);
-				length += buildJump(length, width-length);
-				length += buildTubes(length, width-length);
-				length += buildCannons(length, width-length);*/
+	            length += buildZone(length, width - length);
 	        }
 	        
 
@@ -199,6 +191,26 @@ public class MyLevel extends Level{
 	        
 
 	    }
+		
+	    public int buildZone(int x, int maxLength) {
+	        double t = random.nextDouble()*10;
+	
+			if(t<=this.playerProfile.hillProbability){
+				return buildHillStraight(x, maxLength);
+			}
+			else if(t>this.playerProfile.hillProbability && t<=this.playerProfile.jumpProbability){
+				return buildJump(x, maxLength);
+			}
+			else if(t>this.playerProfile.jumpProbability && t<=this.playerProfile.tubesProbability){
+				return buildTubes(x, maxLength);
+			}
+			else if(t>this.playerProfile.tubesProbability && t<=this.playerProfile.cannonsProbability){
+				return buildCannons(x, maxLength);
+			}
+			else{
+				return buildStraight(x, maxLength, false);
+			}
+	    }
 
 
 	    private int buildJump(int xo, int maxLength)
@@ -227,7 +239,12 @@ public class MyLevel extends Level{
 	                    if (y >= floor)
 	                    {
 	                        setBlock(x, y, GROUND);
-	                        //decorate2(x, x+1, floor);
+	                        float shouldDecorate = random.nextFloat();
+	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                        	System.out.println("DECORATE JUMP");
+	                        	decorate2(x, x+1, floor);
+	                        }
+	                        //decorate2(x, x+1, ifloor);
 	                    }else if (hasStairs)//if it is above ground, start making stairs of rocks
 	                    {	//LEFT SIDE
 	                        if (x < xo + js)
@@ -236,9 +253,10 @@ public class MyLevel extends Level{
 	                            if (y >= floor - (x - xo) + 1)
 	                            {
 	                                setBlock(x, y, ROCK);
-//	                                if(temp == false){
-//	                                	temp = decorate2(x, x+1, y);
-//	                                }
+	                                float shouldDecorate = random.nextFloat();
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	decorate2(x, x+1, y);
+	    	                        }
 	                            }
 	                        }
 	                        else
@@ -246,13 +264,19 @@ public class MyLevel extends Level{
 	                            if (y >= floor - ((xo + length) - x) + 2)
 	                            {
 	                                setBlock(x, y, ROCK);
-//	                                if(temp == false){
-//	                                	temp = decorate2(x, x+1, y);
-//	                                }
+	                                float shouldDecorate = random.nextFloat();
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	decorate2(x, x+1, y);
+	    	                        }
 	                            }
 	                        }
 	                    }
 	                }
+	            }else{
+	            	float shouldDecorate = random.nextFloat();
+                    if (shouldDecorate <= this.playerProfile.coinProbability ) {
+                    	decorate2(x, x+1, floor);
+                    }
 	            }
 	        }
 
