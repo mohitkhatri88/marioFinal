@@ -45,8 +45,8 @@ public class MyLevel extends Level{
 		 public double tubesProbability = 6.0f;
 		 public double cannonsProbability = 8.0f;
 		 public double straightProbability = 1.0f;
-		 public double coinProbability = 0.9f;
-		 public double enemiesProbability = 0.9f;
+		 public double coinProbability = 0.5f;
+		 public double enemiesProbability = 0.5f;
 		 
 		 /*
 		  * Used for keeping the preferences that help decide the type of plan that will be used. 
@@ -69,7 +69,7 @@ public class MyLevel extends Level{
 				 System.out.println("Coinkeeper has been selected.");
 				 profile = Profile.COINKEEPER;
 				 this.coinProbability = 0.8;
-			 } else if (pm.percentageBlocksDestroyed < 0.3 ) {
+			 } else if (pm.percentageBlocksDestroyed < 30 ) {
 				 System.out.println("Speedy got selected, less value will be given to hills.");
 				 profile = Profile.SPEEDY;
 				 //Reduce the hill Probability
@@ -240,9 +240,11 @@ public class MyLevel extends Level{
 	                    {
 	                        setBlock(x, y, GROUND);
 	                        float shouldDecorate = random.nextFloat();
-	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
-	                        	System.out.println("DECORATE JUMP");
+	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
 	                        	decorate2(x, x+1, floor);
+	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+	                        	System.out.println("DECORATE JUMP");
+	                        	addEnemyLine2(x, x+1, floor);
 	                        }
 	                        //decorate2(x, x+1, ifloor);
 	                    }else if (hasStairs)//if it is above ground, start making stairs of rocks
@@ -254,8 +256,11 @@ public class MyLevel extends Level{
 	                            {
 	                                setBlock(x, y, ROCK);
 	                                float shouldDecorate = random.nextFloat();
-	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                                if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
 	    	                        	decorate2(x, x+1, y);
+	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+	    	                        	System.out.println("DECORATE JUMP");
+	    	                        	addEnemyLine2(x, x+1, y);
 	    	                        }
 	                            }
 	                        }
@@ -265,8 +270,11 @@ public class MyLevel extends Level{
 	                            {
 	                                setBlock(x, y, ROCK);
 	                                float shouldDecorate = random.nextFloat();
-	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                                if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
 	    	                        	decorate2(x, x+1, y);
+	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+	    	                        	System.out.println("DECORATE JUMP");
+	    	                        	addEnemyLine2(x, x+1, y);
 	    	                        }
 	                            }
 	                        }
@@ -274,8 +282,11 @@ public class MyLevel extends Level{
 	                }
 	            }else{
 	            	float shouldDecorate = random.nextFloat();
-                    if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
                     	decorate2(x, x+1, floor);
+                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+                    	System.out.println("DECORATE JUMP");
+                    	addEnemyLine2(x, x+1, floor);
                     }
 	            }
 	        }
@@ -283,67 +294,67 @@ public class MyLevel extends Level{
 	        return length;
 	    }
 	    
-	    private int coinBuildJump(int xo, int maxLength)
-	    {	gaps++;
-	    	//jl: jump length
-	    	//js: the number of blocks that are available at either side for free
-	        int js = random.nextInt(4) + 2;
-	        int jl = random.nextInt(2) + 2;
-	        int length = js * 2 + jl;
-	        if (length > maxLength) length = maxLength;
-
-	        boolean hasStairs = random.nextInt(3) == 0;
-	        //boolean hasStairs = true;                        /////////////TRY//////////////
-	        int floor = height - 1 - random.nextInt(4);
-	        //int floor = 13;
-	        int h = floor;
-	       
-	      //run from the start x position, for the whole length
-	        for (int x = xo; x < xo + length; x++)
-	        {
-	        	boolean temp = false;
-	            if (x < xo + js || x > xo + length - js - 1)
-	            {
-	            	//run for all y's since we need to paint blocks upward
-	                for (int y = 0; y < height; y++)
-	                {	//paint ground up until the floor
-	                    if (y >= floor)
-	                    {
-	                        setBlock(x, y, GROUND);
-	                        decorate2(x, x+1, floor);
-	                    }else if (hasStairs)//if it is above ground, start making stairs of rocks
-	                    {	//LEFT SIDE
-	                        if (x < xo + js)
-	                        { //we need to max it out and level because it wont
-	                          //paint ground correctly unless two bricks are side by side
-	                            if (y >= floor - (x - xo) + 1)
-	                            {
-	                                setBlock(x, y, ROCK);
-	                                if(temp == false){
-	                                	temp = decorate2(x, x+1, y);
-	                                	h = y;
-	                                }
-	                            }
-	                        }
-	                        else
-	                        { //RIGHT SIDE
-	                            if (y >= floor - ((xo + length) - x) + 2)
-	                            {
-	                                setBlock(x, y, ROCK);
-	                                if(temp == false){
-	                                	temp = decorate2(x, x+1, y);
-	                                }
-	                            }
-	                        }
-	                    }
-	                }
-	            }else{
-	            	decorate2(x, x+1, h);
-	            }
-	        }
-
-	        return length;
-	    }
+//	    private int coinBuildJump(int xo, int maxLength)
+//	    {	gaps++;
+//	    	//jl: jump length
+//	    	//js: the number of blocks that are available at either side for free
+//	        int js = random.nextInt(4) + 2;
+//	        int jl = random.nextInt(2) + 2;
+//	        int length = js * 2 + jl;
+//	        if (length > maxLength) length = maxLength;
+//
+//	        boolean hasStairs = random.nextInt(3) == 0;
+//	        //boolean hasStairs = true;                        /////////////TRY//////////////
+//	        int floor = height - 1 - random.nextInt(4);
+//	        //int floor = 13;
+//	        int h = floor;
+//	       
+//	      //run from the start x position, for the whole length
+//	        for (int x = xo; x < xo + length; x++)
+//	        {
+//	        	boolean temp = false;
+//	            if (x < xo + js || x > xo + length - js - 1)
+//	            {
+//	            	//run for all y's since we need to paint blocks upward
+//	                for (int y = 0; y < height; y++)
+//	                {	//paint ground up until the floor
+//	                    if (y >= floor)
+//	                    {
+//	                        setBlock(x, y, GROUND);
+//	                        decorate2(x, x+1, floor);
+//	                    }else if (hasStairs)//if it is above ground, start making stairs of rocks
+//	                    {	//LEFT SIDE
+//	                        if (x < xo + js)
+//	                        { //we need to max it out and level because it wont
+//	                          //paint ground correctly unless two bricks are side by side
+//	                            if (y >= floor - (x - xo) + 1)
+//	                            {
+//	                                setBlock(x, y, ROCK);
+//	                                if(temp == false){
+//	                                	temp = decorate2(x, x+1, y);
+//	                                	h = y;
+//	                                }
+//	                            }
+//	                        }
+//	                        else
+//	                        { //RIGHT SIDE
+//	                            if (y >= floor - ((xo + length) - x) + 2)
+//	                            {
+//	                                setBlock(x, y, ROCK);
+//	                                if(temp == false){
+//	                                	temp = decorate2(x, x+1, y);
+//	                                }
+//	                            }
+//	                        }
+//	                    }
+//	                }
+//	            }else{
+//	            	decorate2(x, x+1, h);
+//	            }
+//	        }
+//
+//	        return length;
+//	    }
 
 	    private int buildCannons(int xo, int maxLength)
 	    {
@@ -651,6 +662,21 @@ public class MyLevel extends Level{
 	                }
 
 	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextInt(35) < difficulty));
+	                ENEMIES++;
+	            }
+	        }
+	    }
+	    
+	    private void addEnemyLine2(int x0, int x1, int y)
+	    {
+	        for (int x = x0; x < x1; x++)
+	        {
+	        	float shouldCreateEnemy = random.nextFloat();
+	            if (shouldCreateEnemy <= 0.7)
+	            {
+	                int type = random.nextInt(4);
+	                
+	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextFloat() < 0.3));
 	                ENEMIES++;
 	            }
 	        }
