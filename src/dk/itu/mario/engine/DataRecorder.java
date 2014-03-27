@@ -861,9 +861,10 @@ public class DataRecorder {
 		gpm.ChompFlowersKilled += kills[SpriteTemplate.CHOMP_FLOWER];
 		gpm.WinOrLose = getWinORLose();
 		gpm.write("player.txt");
-		System.out.println(detailedLog);
+		//System.out.println(detailedLog);
+		//write(detailedLog);
+		detailedLog = gpm.getResult();
 		write(detailedLog);
-		
 	}
 
 

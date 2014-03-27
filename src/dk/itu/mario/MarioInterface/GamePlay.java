@@ -63,28 +63,46 @@ public class GamePlay implements Serializable {
 	public boolean WinOrLose;
 	
 	public GamePlay(){
-		try{
+		/*try{
 			file = new FileWriter(new File("player.txt"));
 		}catch (Exception e){
 			e.printStackTrace();
-		}
+		}*/
 	}
 	public void write(String fileName){
-		ObjectOutputStream out = null;
 		try {
 			//FileWriter file = new FileWriter(new File(fileName));
-			file.write(getResult());
-			file.close();
-			/*FileOutputStream fos = new FileOutputStream(fileName);
+			//file.write(getResult());
+			//file.close();
+			FileOutputStream fos = new FileOutputStream(fileName);
+			ObjectOutputStream out = null;
 			out =  new ObjectOutputStream(fos);
 			out.writeObject(this);
-			//out.write(this);*/
+			out.close();
+			//out.write(this);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
+	
+	public static GamePlay read(String fileName){
+		FileInputStream fis = null;
+	    ObjectInputStream in = null;
+	    GamePlay gp =  null;
+		try {
+			fis = new FileInputStream(fileName);
+			in = new ObjectInputStream(fis);
+			gp = (GamePlay)in.readObject();
+			in.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return gp;
+	}
+	
 	public String getResult(){
 		result += "Completion Time = " + completionTime;
 		result += "\n";
@@ -225,19 +243,5 @@ public class GamePlay implements Serializable {
 		result += "\n";
 
 		return result;
-	}
-	public static GamePlay read(String fileName){
-		FileInputStream fis = null;
-	    ObjectInputStream in = null;
-	    GamePlay gp =  null;
-		try {
-			fis = new FileInputStream(fileName);
-			in = new ObjectInputStream(fis);
-			gp = (GamePlay)in.readObject();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return gp;
 	}
 }
