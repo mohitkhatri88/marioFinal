@@ -23,6 +23,53 @@ public class MyLevel extends Level{
 	 public   boolean REGULAR_EASY = false;
 	 public   boolean DESTROYER = false;
 	 public   GamePlay gp;
+	 
+	 public enum Difficulty{EASY, MEDIUM, HARD, HARDER, HARDEST}
+	 
+	 public enum Profile{COINKEEPER, KILLER, DISCOVERER, SPEEDY, JUMPER}
+	 
+	 public class PlayerProfile {
+		 private Difficulty difficulty;
+		 private Profile profile = Profile.SPEEDY;
+		 
+		 public PlayerProfile(GamePlay pm) {
+			 //Get the percentage of the enemies killed. 
+			 int totalEnemiesKilled = pm.ArmoredTurtlesKilled + pm.CannonBallKilled + pm.ChompFlowersKilled + pm.RedTurtlesKilled + pm.GreenTurtlesKilled + pm.JumpFlowersKilled;
+			 double percentageKilled  = totalEnemiesKilled/pm.totalEnemies;
+			 
+			 //Get the exploration rate/Coin percentage of the player 
+			 double percentageCoins = pm.coinsCollected/pm.totalCoins;
+			 double percentageCoinBlocks = pm.percentageBlocksDestroyed;
+			 
+			 /*Rules for deciding between the personalities*/
+			 if (percentageKilled > 0.3) {
+				 profile = Profile.KILLER;
+			 } else if (percentageCoinBlocks >= 0.3 && percentageCoins >= 0.3) {
+				 profile = Profile.DISCOVERER;
+			 } else if (percentageCoinBlocks > 0.3) {
+				 profile = Profile.COINKEEPER;
+			 } else if (percentageCoinBlocks < 0.3 && percentageCoins < 0.3) {
+				 profile = Profile.SPEEDY;
+			 } else if (pm.aimlessJumps/pm.jumpsNumber > 0.4) {
+				 profile = Profile.JUMPER;
+			 }
+			 
+			 //We have to decide between overall difficulty levels.
+			 if (pm.WinOrLose == true) {
+				 difficulty = Difficulty.HARDEST;
+			 } else if (pm.timesOfDeathByArmoredTurtle <= 1 && pm.timesOfDeathByCannonBall <=1 && pm.timesOfDeathByChompFlower <=1 && pm.timesOfDeathByFallingIntoGap <=1) {
+				 difficulty = Difficulty.HARDER;
+			 } else if (pm.timesOfDeathByArmoredTurtle <= 2 && pm.timesOfDeathByCannonBall <=2 && pm.timesOfDeathByChompFlower <=2 && pm.timesOfDeathByFallingIntoGap <=2) {
+				 difficulty = Difficulty.HARD;
+			 } else if (percentageCoins > 0.3) {
+				 difficulty = Difficulty.MEDIUM;
+			 } else {
+				 difficulty = Difficulty.EASY;
+			 }
+		 }
+	 }
+	 
+	 public PlayerProfile playerProfile;
  
 	private static Random levelSeedRandom = new Random();
 	    public static long lastSeed;
@@ -45,6 +92,7 @@ public class MyLevel extends Level{
 	        this(width, height);
 	        verify(playerMetrics);
 	        creat(seed, difficulty, type);
+	        this.playerProfile = new PlayerProfile(playerMetrics);
 	    }
 
 	    public void verify(GamePlay gp){
