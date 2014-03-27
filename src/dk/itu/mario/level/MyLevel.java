@@ -45,8 +45,8 @@ public class MyLevel extends Level{
 		 public double tubesProbability = 6.0f;
 		 public double cannonsProbability = 8.0f;
 		 public double straightProbability = 1.0f;
-		 public double coinProbability = 0.9f;
-		 public double enemiesProbability = 0.9f;
+		 public double coinProbability = 0.5f;
+		 public double enemiesProbability = 0.5f;
 		 
 		 /*
 		  * Used for keeping the preferences that help decide the type of plan that will be used. 
@@ -240,7 +240,9 @@ public class MyLevel extends Level{
 	                    {
 	                        setBlock(x, y, GROUND);
 	                        float shouldDecorate = random.nextFloat();
-	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	                        	decorate2(x, x+1, floor);
+	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
 	                        	System.out.println("DECORATE JUMP");
 	                        	decorate2(x, x+1, floor);
 	                        }
@@ -254,7 +256,10 @@ public class MyLevel extends Level{
 	                            {
 	                                setBlock(x, y, ROCK);
 	                                float shouldDecorate = random.nextFloat();
-	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                                if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        	decorate2(x, x+1, y);
+	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+	    	                        	System.out.println("DECORATE JUMP");
 	    	                        	decorate2(x, x+1, y);
 	    	                        }
 	                            }
@@ -265,7 +270,10 @@ public class MyLevel extends Level{
 	                            {
 	                                setBlock(x, y, ROCK);
 	                                float shouldDecorate = random.nextFloat();
-	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                                if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        	decorate2(x, x+1, y);
+	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+	    	                        	System.out.println("DECORATE JUMP");
 	    	                        	decorate2(x, x+1, y);
 	    	                        }
 	                            }
@@ -274,7 +282,10 @@ public class MyLevel extends Level{
 	                }
 	            }else{
 	            	float shouldDecorate = random.nextFloat();
-                    if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+                    	decorate2(x, x+1, floor);
+                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+                    	System.out.println("DECORATE JUMP");
                     	decorate2(x, x+1, floor);
                     }
 	            }
@@ -651,6 +662,21 @@ public class MyLevel extends Level{
 	                }
 
 	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextInt(35) < difficulty));
+	                ENEMIES++;
+	            }
+	        }
+	    }
+	    
+	    private void addEnemyLine2(int x0, int x1, int y)
+	    {
+	        for (int x = x0; x < x1; x++)
+	        {
+	        	float shouldCreateEnemy = random.nextFloat();
+	            if (shouldCreateEnemy <= 0.7)
+	            {
+	                int type = random.nextInt(4);
+	                
+	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextFloat() < 0.3));
 	                ENEMIES++;
 	            }
 	        }
