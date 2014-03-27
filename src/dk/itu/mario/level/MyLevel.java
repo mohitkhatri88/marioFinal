@@ -127,19 +127,19 @@ public class MyLevel extends Level{
 	        		
 	        	}
 	            //length += buildZone(length, width - length);
-				length += coinBuildStraight(length, width-length, false);
-				length += coinBuildStraight(length, width-length, false);
-				length += coinBuildHillStraight(length, width-length);
-				length += coinBuildJump(length, width-length);
-				length += coinBuildTubes(length, width-length);
-				length += coinBuildCannons(length, width-length);
+//				length += coinBuildStraight(length, width-length, false);
+//				length += coinBuildStraight(length, width-length, false);
+//				length += coinBuildHillStraight(length, width-length);
+//				length += coinBuildJump(length, width-length);
+//				length += coinBuildTubes(length, width-length);
+//				length += coinBuildCannons(length, width-length);
 	        	
-//				//length += buildStraight(length, width-length, false);
-//				length += buildStraight(length, width-length, false);
-//				length += buildHillStraight(length, width-length);
-//				length += buildJump(length, width-length);
-//				length += buildTubes(length, width-length);
-//				length += buildCannons(length, width-length);
+				length += buildStraight(length, width-length, false);
+				length += buildStraight(length, width-length, false);
+				length += buildHillStraight(length, width-length);
+				length += buildJump(length, width-length);
+				length += buildTubes(length, width-length);
+				length += buildCannons(length, width-length);
 	        	
 				/*length += buildStraight(length, width-length, false);
 				length += buildStraight(length, width-length, false);
