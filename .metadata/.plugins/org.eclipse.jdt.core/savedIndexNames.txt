@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+C:\myProgram\School\cs4731\MarioProceduralLevelGeneration\.metadata\.plugins\org.eclipse.jdt.core
+2342445879.index
