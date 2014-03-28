@@ -45,8 +45,8 @@ public class MyLevel extends Level{
 		 public double tubesProbability = 6.0f;
 		 public double cannonsProbability = 8.0f;
 		 public double straightProbability = 1.0f;
-		 public double coinProbability = 0.5f;
-		 public double enemiesProbability = 0.5f;
+		 public double coinProbability = 0.4f;
+		 public double enemiesProbability = 0.4f;
 		 
 		 /*
 		  * Used for keeping the preferences that help decide the type of plan that will be used. 
@@ -68,20 +68,26 @@ public class MyLevel extends Level{
 			 } else if (percentageCoins > 0.5) {
 				 System.out.println("Coinkeeper has been selected.");
 				 profile = Profile.COINKEEPER;
-				 this.coinProbability = 0.8;
+				 this.coinProbability = 0.7;
 			 } else if (pm.percentageBlocksDestroyed < 30 ) {
 				 System.out.println("Speedy got selected, less value will be given to hills.");
 				 profile = Profile.SPEEDY;
 				 //Reduce the hill Probability
-				 this.hillProbability = 1.0;
-				 this.jumpProbability = 3.25;
-				 this.tubesProbability = 5.5;
-				 this.cannonsProbability = 7.75;
+//				 this.hillProbability = 1.0;
+//				 this.jumpProbability = 3.25;
+//				 this.tubesProbability = 5.5;
+//				 this.cannonsProbability = 7.75;
+//				 this.straightProbability =  10.0;
+//				 
+				 this.hillProbability = 2.66;
+				 this.jumpProbability = 5.32;
+				 this.tubesProbability = 6.32;
+				 this.cannonsProbability = 7.32;
 				 this.straightProbability =  10.0;
 			 } else if (pm.aimlessJumps/pm.jumpsNumber > 0.5) {
 				 System.out.println("Jumper has been selected.");
 				 profile = Profile.JUMPER;
-				 this.hillProbability = 3;
+				 this.hillProbability = 1.75;
 				 this.jumpProbability = 4.75;
 				 this.tubesProbability = 6.5;
 				 this.cannonsProbability = 8.25;
@@ -223,9 +229,8 @@ public class MyLevel extends Level{
 	        if (length > maxLength) length = maxLength;
 
 	        boolean hasStairs = random.nextInt(3) == 0;
-	        //boolean hasStairs = true;                        /////////////TRY//////////////
 	        int floor = height - 1 - random.nextInt(4);
-	        //int floor = 13;
+	        int h = floor;
 	       
 	      //run from the start x position, for the whole length
 	        for (int x = xo; x < xo + length; x++)
@@ -239,12 +244,12 @@ public class MyLevel extends Level{
 	                    if (y >= floor)
 	                    {
 	                        setBlock(x, y, GROUND);
-	                        float shouldDecorate = random.nextFloat();
-	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                        	decorate2(x, x+1, floor);
-	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	                        	System.out.println("DECORATE JUMP");
-	                        	addEnemyLine2(x, x+1, floor);
+	                        if(temp == false){
+		                        float shouldDecorate = random.nextFloat();
+	//	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+		                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+		                        	temp = decorate2(x, x+1, y);
+		                        }
 	                        }
 	                        //decorate2(x, x+1, ifloor);
 	                    }else if (hasStairs)//if it is above ground, start making stairs of rocks
@@ -255,13 +260,14 @@ public class MyLevel extends Level{
 	                            if (y >= floor - (x - xo) + 1)
 	                            {
 	                                setBlock(x, y, ROCK);
-	                                float shouldDecorate = random.nextFloat();
-	                                if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	    	                        	decorate2(x, x+1, y);
-	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	    	                        	System.out.println("DECORATE JUMP");
-	    	                        	addEnemyLine2(x, x+1, y);
-	    	                        }
+	                                if(temp == false){
+	                                	h = y;
+		    	                        float shouldDecorate = random.nextFloat();
+	//	    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+		    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+		    	                        	temp = decorate2(x, x+1, y);
+		    	                        }
+	                                }
 	                            }
 	                        }
 	                        else
@@ -269,24 +275,22 @@ public class MyLevel extends Level{
 	                            if (y >= floor - ((xo + length) - x) + 2)
 	                            {
 	                                setBlock(x, y, ROCK);
-	                                float shouldDecorate = random.nextFloat();
-	                                if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	    	                        	decorate2(x, x+1, y);
-	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	    	                        	System.out.println("DECORATE JUMP");
-	    	                        	addEnemyLine2(x, x+1, y);
-	    	                        }
+	                                if(temp == false){
+		    	                        float shouldDecorate = random.nextFloat();
+	//	    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+		    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+		    	                        	temp = decorate2(x, x+1, y);
+		    	                        }
+	                                }
 	                            }
 	                        }
 	                    }
 	                }
 	            }else{
-	            	float shouldDecorate = random.nextFloat();
-	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-                    	decorate2(x, x+1, floor);
-                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-                    	System.out.println("DECORATE JUMP");
-                    	addEnemyLine2(x, x+1, floor);
+                    float shouldDecorate = random.nextFloat();
+//                    if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+                    if (shouldDecorate <= this.playerProfile.coinProbability ) {
+                    	decorate2(x, x+1, h);
                     }
 	            }
 	        }
@@ -365,6 +369,7 @@ public class MyLevel extends Level{
 	        int xCannon = xo + 1 + random.nextInt(4);
 	        for (int x = xo; x < xo + length; x++)
 	        {
+	        	boolean temp = false;
 	            if (x > xCannon)
 	            {
 	                xCannon += 2 + random.nextInt(4);
@@ -377,9 +382,12 @@ public class MyLevel extends Level{
 	                if (y >= floor)
 	                {
 	                    setBlock(x, y, GROUND);
-	                    float shouldDecorate = random.nextFloat();
-	                    if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                    	decorate2(x, x+1, y);
+	                    if(temp == false){
+	                        float shouldDecorate = random.nextFloat();
+	//                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                        	temp = decorate2(x, x+1, y);
+	                        }
 	                    }
 	                }
 	                else
@@ -389,26 +397,35 @@ public class MyLevel extends Level{
 	                        if (y == cannonHeight)
 	                        {
 	                            setBlock(x, y, (byte) (14 + 0 * 16));
-	                            float shouldDecorate = random.nextFloat();
-	                            if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	    	                    	decorate2(x, x+1, y);
-	    	                    }
+    	                        if(temp == false){
+		                            float shouldDecorate = random.nextFloat();
+	//    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	temp = decorate2(x, x+1, y);
+	    	                        }
+    	                        }
 	                        }
 	                        else if (y == cannonHeight + 1)
 	                        {
 	                            setBlock(x, y, (byte) (14 + 1 * 16));
-	                            float shouldDecorate = random.nextFloat();
-	                            if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	    	                    	decorate2(x, x+1, y);
-	    	                    }
+	                            if(temp == false){
+		                            float shouldDecorate = random.nextFloat();
+	//    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	temp = decorate2(x, x+1, y);
+	    	                        }
+    	                        }
 	                        }
 	                        else
 	                        {
 	                            setBlock(x, y, (byte) (14 + 2 * 16));
-	                            float shouldDecorate = random.nextFloat();
-	                            if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	    	                    	decorate2(x, x+1, y);
-	    	                    }
+	                            if(temp == false){
+		                            float shouldDecorate = random.nextFloat();
+	//    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	temp = decorate2(x, x+1, y);
+	    	                        }
+    	                        }
 	                        }
 	                    }
 	                }
@@ -487,16 +504,14 @@ public class MyLevel extends Level{
 	            {
 	                if (y >= floor)
 	                {
+	                	setBlock(x, y, GROUND);
 	                	if (temp == false) {
-	                		float shouldDecorate = random.nextFloat();
-	    	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                        	decorate2(x, x+1, y);
-	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	                        	System.out.println("DECORATE JUMP");
-	                        	addEnemyLine2(x, x+1, y);
+	                        float shouldDecorate = random.nextFloat();
+//	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                        	temp = decorate2(x, x+1, y);
 	                        }
 	                	}
-	                    setBlock(x, y, GROUND);
 	                }
 	            }
 	        }
@@ -531,9 +546,13 @@ public class MyLevel extends Level{
 	                    occupied[xxo - xo + l] = true;
 	                    //addEnemyLine(xxo, xxo + l, h - 1);
 	                    float shouldDecorate = random.nextFloat();
-	                    if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+//	                    if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+//                        	System.out.println("DECORATE JUMP");
+//                        	addEnemyLine2(xxo, xxo + l, h - 1);
+//                        }
+                        if(shouldDecorate <= this.playerProfile.enemiesProbability){	
                         	System.out.println("DECORATE JUMP");
-                        	addEnemyLine2(xxo, xxo + l, h - 1);
+                        	addEnemyLine2(xxo, xxo+1, h-1);
                         }
 	                    if (random.nextInt(4) == 0)
 	                    {
@@ -559,13 +578,17 @@ public class MyLevel extends Level{
 	                                if(getBlock(x, y) == BLOCK_COIN) BLOCKS_COINS--;
 	                                if(getBlock(x, y) == BLOCK_EMPTY) BLOCKS_EMPTY--;
 	                                if (temp == false) {
-	                                	shouldDecorate = random.nextFloat();
-	                	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                                    	decorate2(x, x+1, floor);
-	                                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	                                    	System.out.println("DECORATE JUMP");
-	                                    	addEnemyLine2(x, x+1, floor);
-	                                    }
+		    	                        shouldDecorate = random.nextFloat();
+//		    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+		    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+		    	                        	temp = decorate2(x, x+1, y);
+		    	                        }
+//		    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+		    	                        shouldDecorate = random.nextFloat();
+		    	                        if(temp == false && shouldDecorate <= this.playerProfile.enemiesProbability){	
+		    	                        	System.out.println("DECORATE JUMP");
+		    	                        	temp = addEnemyLine2(x, x+1, y - 1);
+		    	                        }
 	                                }
 	                            }
 	                            else
@@ -574,12 +597,16 @@ public class MyLevel extends Level{
 	                                if (getBlock(x, y) == HILL_TOP_RIGHT) setBlock(x, y, HILL_TOP_RIGHT_IN);
 	                                if (temp == false) {
 	                                	shouldDecorate = random.nextFloat();
-	                	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                                    	decorate2(x, x+1, floor);
-	                                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	                                    	System.out.println("DECORATE JUMP");
-	                                    	addEnemyLine2(x, x+1, floor);
-	                                    }
+//		    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+		    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+		    	                        	temp = decorate2(x, x+1, y);
+		    	                        }
+//		    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+		    	                        shouldDecorate = random.nextFloat();
+		    	                        if(temp == false && shouldDecorate <= this.playerProfile.enemiesProbability){	
+		    	                        	System.out.println("DECORATE JUMP");
+		    	                        	temp = addEnemyLine2(x, x+1, y - 1);
+		    	                        }
 	                                }
 	                            }
 	                        }
@@ -712,19 +739,23 @@ public class MyLevel extends Level{
 	        }
 	    }
 	    
-	    private void addEnemyLine2(int x0, int x1, int y)
+	    private boolean addEnemyLine2(int x0, int x1, int y)
 	    {
+	    	boolean result = false;
+	    	
 	        for (int x = x0; x < x1; x++)
 	        {
-	        	//float shouldCreateEnemy = random.nextFloat();
-	            //if (shouldCreateEnemy <= 0.7)
-	            //{
+	        	float shouldCreateEnemy = random.nextFloat();
+	            if (shouldCreateEnemy <= 0.5)
+	            {
 	                int type = random.nextInt(4);
 	                
 	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextFloat() < 0.3));
 	                ENEMIES++;
-	            //}
+	                result = true;
+	            }
 	        }
+	        return result;
 	    }
 
 	    private int buildTubes(int xo, int maxLength)
@@ -757,13 +788,11 @@ public class MyLevel extends Level{
 	                {
 	                    setBlock(x, y,GROUND);
 	                    if (temp == false) {
-	                    	float shouldDecorate = random.nextFloat();
-        	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-                            	decorate2(x, x+1, floor);
-                            } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-                            	System.out.println("DECORATE JUMP");
-                            	addEnemyLine2(x, x+1, floor);
-                            }
+	                        float shouldDecorate = random.nextFloat();
+//	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	                        	temp = decorate2(x, x+1, y);
+	                        }
 	                    }
 
 	                }
@@ -778,13 +807,11 @@ public class MyLevel extends Level{
 	                        	//tube top
 	                            setBlock(x, y, (byte) (xPic + 0 * 16));
 	                            if (temp == false) {
-	    	                    	float shouldDecorate = random.nextFloat();
-	            	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                                	decorate2(x, x+1, floor);
-	                                } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	                                	System.out.println("DECORATE JUMP");
-	                                	addEnemyLine2(x, x+1, floor);
-	                                }
+	    	                        float shouldDecorate = random.nextFloat();
+//	    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	temp = decorate2(x, x+1, y);
+	    	                        }
 	    	                    }
 	                        }
 	                        else
@@ -792,13 +819,17 @@ public class MyLevel extends Level{
 	                        	//tube side
 	                            setBlock(x, y, (byte) (xPic + 1 * 16));
 	                            if (temp == false) {
-	    	                    	float shouldDecorate = random.nextFloat();
-	            	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
-	                                	decorate2(x, x+1, floor);
-	                                } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
-	                                	System.out.println("DECORATE JUMP");
-	                                	addEnemyLine2(x, x+1, floor);
-	                                }
+	    	                        float shouldDecorate = random.nextFloat();
+//	    	                        if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+	    	                        if (shouldDecorate <= this.playerProfile.coinProbability ) {
+	    	                        	temp = decorate2(x, x+1, y);
+	    	                        }
+//	    	                        } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+	    	                        shouldDecorate = random.nextFloat();
+	    	                        if(temp == false && shouldDecorate <= this.playerProfile.enemiesProbability){	
+	    	                        	System.out.println("DECORATE JUMP");
+	    	                        	temp = addEnemyLine2(x, x+1, y - 1);
+	    	                        }
 	    	                    }
 	                        }
 	                    }
@@ -881,15 +912,30 @@ public class MyLevel extends Level{
 	        	length = maxLength;
 
 	        int floor = height - 1 - random.nextInt(4);
+	        
 
 	        //runs from the specified x position to the length of the segment
 	        for (int x = xo; x < xo + length; x++)
 	        {
+//	        	boolean temp = false;
 	            for (int y = 0; y < height; y++)
 	            {
 	                if (y >= floor)
 	                {
 	                    setBlock(x, y, GROUND);
+//	                    if(temp == false){
+//	                    	float shouldDecorate = random.nextFloat();
+////	                      if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+//	                      if (shouldDecorate <= this.playerProfile.coinProbability ) {
+//	                      	temp = decorate2(x, x+1, y);
+//	                      }
+////	                      } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+//	                      shouldDecorate = random.nextFloat();
+//	                      if(temp == false && shouldDecorate <= this.playerProfile.enemiesProbability){	
+//	                      	System.out.println("DECORATE JUMP");
+//	                      	temp = addEnemyLine2(x, x+1, y - 1);
+//	                      }
+//	                    }
 	                }
 	            }
 	        }
@@ -898,11 +944,15 @@ public class MyLevel extends Level{
 	        {
 	        	for(int x = xo; x < xo + length; x++) {
 	        		float shouldDecorate = random.nextFloat();
-	            	if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+//                    if (((this.playerProfile.coinProbability >= this.playerProfile.enemiesProbability) && shouldDecorate <= this.playerProfile.coinProbability) ) {
+                    if (shouldDecorate <= this.playerProfile.coinProbability ) {
                     	decorate2(x, x+1, floor);
-                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+                    }
+//                    } else if (((this.playerProfile.enemiesProbability >= this.playerProfile.coinProbability) && shouldDecorate <= this.playerProfile.enemiesProbability) ) {
+                    shouldDecorate = random.nextFloat();
+                    if(shouldDecorate <= this.playerProfile.enemiesProbability){	
                     	System.out.println("DECORATE JUMP");
-                    	addEnemyLine2(x, x+1, floor);
+                    	addEnemyLine2(x, x+1, floor - 1);
                     }
 	        	}
 	            if (length > 5)

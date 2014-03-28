@@ -36,8 +36,8 @@ public class txtGenerator {
 		gpm.totalTimeLargeMode  = 0;//Time Spent Being Large Mario
 		gpm.totalTimeFireMode  = 0;//Time Spent Being Fire Mario
 		gpm.timesSwichingPower  = 0;//Number of Times Switched Between Little, Large or Fire Mario
-		gpm.aimlessJumps  = 50;//aimless jumps
-		gpm.percentageBlocksDestroyed  = 0;//percentage of all blocks destroyed
+		gpm.aimlessJumps  = 0;//aimless jumps
+		gpm.percentageBlocksDestroyed  = 1;//percentage of all blocks destroyed
 		gpm.percentageCoinBlocksDestroyed  = 0;//percentage of coin blocks destroyed
 		gpm.percentageEmptyBlockesDestroyed  = 0;//percentage of empty blocks destroyed
 		gpm.percentagePowerBlockDestroyed  = 0;//percentage of power blocks destroyed
